@@ -1,10 +1,11 @@
 const mysql = require('mysql2/promise');
 
 const pool = mysql.createPool({
-  host: 'localhost',
-  user: 'root',
-  password: '',        // your MySQL Workbench root password goes here
-  database: 'usap_db',
+  host: process.env.MYSQLHOST || 'localhost',
+  user: process.env.MYSQLUSER || 'root',
+  password: process.env.MYSQLPASSWORD || '',
+  database: process.env.MYSQLDATABASE || 'usap_db',
+  port: process.env.MYSQLPORT || 3306,
   waitForConnections: true,
   connectionLimit: 10
 });
