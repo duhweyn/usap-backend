@@ -34,13 +34,33 @@ app.post('/users/sync', async (req, res) => {
   }
 });
 
+// ── POST /users/avatar ──────────────────────────────
+// Saves the uploaded avatar's public URL for a user.
+// Expects { supabase_uid, avatar_url } in the body.
+app.post('/users/avatar', async (req, res) => {
+  try {
+    const { supabase_uid, avatar_url } = req.body;
+    if (!supabase_uid || !avatar_url) {
+      return res.status(400).json({ error: 'supabase_uid and avatar_url are required' });
+    }
+    await pool.query(
+      'UPDATE users SET avatar_url = ? WHERE supabase_uid = ?',
+      [avatar_url, supabase_uid]
+    );
+    res.json({ message: 'Avatar updated' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to update avatar' });
+  }
+});
+
 // ── GET /posts ──────────────────────────────────────
 // Returns all posts, newest first, joined with the author's username
 app.get('/posts', async (req, res) => {
   try {
     const [rows] = await pool.query(`
       SELECT posts.post_id, posts.content, posts.privacy, posts.created_at,
-             users.username, users.user_id
+             users.username, users.user_id, users.avatar_url
       FROM posts
       JOIN users ON posts.user_id = users.user_id
       ORDER BY posts.created_at DESC
@@ -130,7 +150,7 @@ app.get('/comments/:post_id', async (req, res) => {
   try {
     const [rows] = await pool.query(`
       SELECT comments.comment_id, comments.content, comments.created_at,
-             users.username
+             users.username, users.avatar_url
       FROM comments
       JOIN users ON comments.user_id = users.user_id
       WHERE comments.post_id = ?

@@ -2,11 +2,12 @@ const SUPABASE_URL  = 'https://xmhtxfyaewwerbkoubqk.supabase.co';
 const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhtaHR4ZnlhZXd3ZXJia291YnFrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE0MDMwNzcsImV4cCI6MjA5Njk3OTA3N30.IQupFoqMWqHskT2Gv3WM3pz7J8HroWpbdbsA1LDDmXM';
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
-const BACKEND_URL = 'https://usap-backend-production.up.railway.app';
+const BACKEND_URL = 'http://localhost:3000';
 
 /* ── State ── */
 var currentUser = null;
 var currentUsername = 'user';
+var currentAvatarUrl = null;   // pulled from localStorage after pfp upload
 var currentMysqlUserId = null; // the real MySQL user_id, not the Supabase UUID
 var posts = [];                // populated from the backend, no longer fake/local
 var activePostId = null;       // post open in comment modal
@@ -29,10 +30,26 @@ var privacySetting = 'Everyone';
   document.getElementById('sidebar-handle').textContent = handle;
   document.getElementById('logout-handle').textContent = handle;
 
+  // Pull the uploaded profile picture URL (saved during signup) and apply it
+  currentAvatarUrl = localStorage.getItem('avatar_' + currentUser.id);
+  applyAvatar(document.querySelector('.profile-avatar'), currentAvatarUrl);
+
   // Make sure this Supabase user has a matching row in MySQL, then load the feed
   await syncUser(accountType);
   await loadPosts();
 })();
+
+/* Apply an avatar URL to a placeholder div, falling back to the gray circle if none exists */
+function applyAvatar(el, url) {
+  if (!el) return;
+  if (url) {
+    el.style.backgroundImage = 'url(' + url + ')';
+    el.style.backgroundSize = 'cover';
+    el.style.backgroundPosition = 'center';
+  } else {
+    el.style.backgroundImage = '';
+  }
+}
 
 /* ── Sync Supabase user into MySQL, get back the real user_id ── */
 async function syncUser(accountType) {
@@ -63,6 +80,7 @@ async function loadPosts() {
         id: row.post_id,
         userId: row.user_id,
         username: row.username,
+        avatarUrl: row.avatar_url,
         content: row.content,
         privacy: row.privacy,
         createdAt: row.created_at,
@@ -199,6 +217,7 @@ function renderFeed() {
   posts.forEach(function(post) {
     var card = makePostCard(post);
     area.appendChild(card);
+    applyAvatar(card.querySelector('.post-user-avatar'), post.avatarUrl);
     loadRelateCount(post, card);
     loadCommentCount(post, card);
   });
@@ -310,7 +329,7 @@ async function loadAndRenderComments(post) {
     var res = await fetch(BACKEND_URL + '/comments/' + post.id);
     var rows = await res.json();
     var comments = rows.map(function(row) {
-      return { username: row.username, text: row.content };
+      return { username: row.username, text: row.content, avatarUrl: row.avatar_url };
     });
     renderComments(comments);
   } catch (err) {
@@ -337,6 +356,7 @@ function renderComments(comments) {
         '<div class="comment-username">' + esc(c.username) + '</div>' +
         '<div class="comment-text">' + esc(c.text) + '</div>' +
       '</div>';
+    applyAvatar(item.querySelector('.comment-avatar'), c.avatarUrl);
     list.appendChild(item);
   });
 }
