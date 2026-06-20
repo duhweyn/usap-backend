@@ -1,0 +1,384 @@
+html {
+  zoom: 0.8;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; }
+
+body {
+  display: flex;
+  min-height: 100vh;
+  background-color: #231e66;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* ── Left panel ── */
+.left-panel {
+  flex-shrink: 0;
+  width: 57.6%;
+  min-width: 300px;
+  background-color: #ffffff;
+  border-radius: 0 30px 30px 0;
+  box-shadow: 10px 0px 0px 0px rgba(0,0,0,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+.logo-wrapper {
+  width: 100%;
+  max-width: 731px;
+  aspect-ratio: 731 / 730;
+}
+
+.logo-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: drop-shadow(10px 10px 0px rgba(0,0,0,0.25));
+}
+
+/* ── Right panel ── */
+.right-panel {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 48px 40px;
+}
+
+.heading-main {
+  font-weight: 700;
+  font-size: clamp(40px, 6.6vw, 96px);
+  color: #ffffff;
+  line-height: normal;
+}
+
+.heading-sub {
+  font-weight: 700;
+  font-size: clamp(20px, 2.8vw, 40px);
+  color: #ffffff;
+  line-height: normal;
+  margin-bottom: 24px;
+}
+
+/* ── Primary button (white bg) ── */
+.btn {
+  width: 100%;
+  height: 48px;
+  border-radius: 10px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 400;
+  font-size: clamp(16px, 2.2vw, 32px);
+  text-align: center;
+  cursor: pointer;
+  border: 1.5px solid #000000;
+  background-color: #ffffff;
+  color: #000000;
+  margin-bottom: 12px;
+  transition: background-color 0.15s, border-color 0.15s;
+}
+.btn:hover  { background-color: #e0e0e0; }
+.btn:active { background-color: #c8c8c8; }
+
+/* ── Or divider ── */
+.or-divider {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin: 4px 0 12px;
+}
+
+.or-line {
+  flex: 1;
+  height: 3px;
+  border-radius: 999px;
+  background-color: #ffffff;
+}
+
+.or-text {
+  font-weight: 400;
+  font-size: clamp(20px, 2.2vw, 32px);
+  color: #ffffff;
+  padding: 0 24px;
+}
+
+/* ── Terms ── */
+.terms {
+  font-weight: 400;
+  font-size: clamp(12px, 1.4vw, 20px);
+  color: #ffffff;
+  line-height: normal;
+  margin-bottom: 32px;
+}
+.terms a {
+  font-weight: 700;
+  color: #5f58ba;
+  text-decoration: none;
+}
+.terms a:hover { text-decoration: underline; }
+
+.already-text {
+  font-weight: 400;
+  font-size: clamp(16px, 2.2vw, 32px);
+  color: #ffffff;
+  line-height: normal;
+  margin-bottom: 12px;
+}
+
+/* ── Ghost button (Sign In) ── */
+.btn-signin {
+  width: 100%;
+  height: 48px;
+  border-radius: 10px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 400;
+  font-size: clamp(16px, 2.2vw, 32px);
+  text-align: center;
+  cursor: pointer;
+  border: 1.5px solid #ffffff;
+  background-color: transparent;
+  color: #ffffff;
+  transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+}
+.btn-signin:hover  { background-color: rgba(95,88,186,0.15); border-color: #5f58ba; color: #a09de0; }
+.btn-signin:active { background-color: rgba(95,88,186,0.28); }
+
+/* ════════════════════════════════
+   MODAL SYSTEM
+════════════════════════════════ */
+.modal-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+}
+.modal-backdrop.active { display: flex; }
+
+.modal {
+  position: relative;
+  width: 724px;
+  max-width: 95vw;
+  background-color: #231e66;
+  border: 1px solid #ffffff;
+  border-radius: 30px;
+  box-shadow: 10px 10px 0px 0px rgba(0,0,0,0.25);
+  overflow: hidden;
+  font-family: 'Poppins', sans-serif;
+  transform: scale(0.92);
+  opacity: 0;
+  transition: transform 0.22s ease, opacity 0.22s ease;
+}
+.modal-backdrop.active .modal { transform: scale(1); opacity: 1; }
+
+/* ── Modal close button ── */
+.modal-close {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 30px;
+  padding: 10px;
+  transition: background 0.15s;
+}
+.modal-close:hover { background: rgba(255,255,255,0.12); }
+.modal-close svg { display: block; }
+
+/* ── Modal heading ── */
+.modal-heading {
+  font-weight: 700;
+  font-size: 32px;
+  color: #ffffff;
+  line-height: normal;
+  position: absolute;
+  left: 62px;
+  top: 113px;
+  white-space: nowrap;
+}
+
+/* ── Input field ── */
+.modal-field {
+  position: absolute;
+  left: 62px;
+  width: 600px;
+  border: 1.5px solid #ffffff;
+  border-radius: 10px;
+  padding: 5px 10px;
+  display: flex;
+  align-items: center;
+  transition: border-color 0.15s;
+}
+.modal-field:focus-within { border-color: #5f58ba; }
+.modal-field input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 400;
+  font-size: 24px;
+  color: #ffffff;
+  line-height: normal;
+}
+.modal-field input::placeholder { color: rgba(255,255,255,0.45); }
+
+/* ── Modal primary button (white bg) ── */
+.modal-btn-primary {
+  position: absolute;
+  left: 62px;
+  width: 600px;
+  background: #ffffff;
+  border: 1.5px solid #000000;
+  border-radius: 10px;
+  padding: 5px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 400;
+  font-size: 24px;
+  color: #000000;
+  cursor: pointer;
+  transition: background-color 0.15s;
+  line-height: normal;
+}
+.modal-btn-primary:hover  { background-color: #e0e0e0; }
+.modal-btn-primary:active { background-color: #c8c8c8; }
+
+/* ── Modal ghost button ── */
+.modal-btn-ghost {
+  position: absolute;
+  left: 62px;
+  width: 600px;
+  background: transparent;
+  border: 1.5px solid #ffffff;
+  border-radius: 10px;
+  padding: 5px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 400;
+  font-size: 24px;
+  color: #ffffff;
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+  line-height: normal;
+}
+.modal-btn-ghost:hover  { background-color: rgba(95,88,186,0.15); border-color: #5f58ba; color: #a09de0; }
+.modal-btn-ghost:active { background-color: rgba(95,88,186,0.28); }
+
+/* ── Modal small text ── */
+.modal-link-row {
+  position: absolute;
+  font-weight: 400;
+  font-size: 15px;
+  color: #ffffff;
+  white-space: nowrap;
+}
+.modal-link-row a {
+  color: #5f58ba;
+  text-decoration: none;
+  cursor: pointer;
+}
+.modal-link-row a:hover { text-decoration: underline; }
+
+.modal-forgot {
+  position: absolute;
+  left: 62px;
+  font-weight: 400;
+  font-size: 15px;
+  color: #5f58ba;
+  white-space: nowrap;
+  cursor: pointer;
+  text-decoration: none;
+}
+.modal-forgot:hover { text-decoration: underline; }
+
+.modal-label {
+  position: absolute;
+  font-weight: 400;
+  font-size: 15px;
+  color: #ffffff;
+  line-height: normal;
+}
+
+/* ── DOB dropdowns ── */
+.dob-row {
+  position: absolute;
+  left: 62px;
+  top: 450px;
+  display: flex;
+  gap: 15px;
+}
+.dob-dropdown {
+  position: relative;
+  border: 1.5px solid #ffffff;
+  border-radius: 10px;
+  padding: 5px 36px 5px 10px;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 69px;
+  transition: border-color 0.15s;
+}
+.dob-dropdown:focus-within { border-color: #5f58ba; }
+.dob-dropdown select {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+.dob-dropdown .dob-label {
+  font-size: 15px;
+  font-weight: 400;
+  line-height: normal;
+  color: #ffffff;
+  pointer-events: none;
+}
+.dob-dropdown .dob-value {
+  font-size: 24px;
+  font-weight: 400;
+  line-height: normal;
+  color: #ffffff;
+  pointer-events: none;
+}
+.dob-dropdown .dob-arrow {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+.dob-month { width: 200px; }
+.dob-day   { width: 115px; }
+.dob-year  { width: 115px; }
+
+@media (max-width: 700px) {
+  body { flex-direction: column; overflow: auto; }
+  .left-panel {
+    width: 100%;
+    border-radius: 0 0 30px 30px;
+    box-shadow: 0px 10px 0px 0px rgba(0,0,0,0.25);
+    padding: 32px 24px;
+    min-width: unset;
+  }
+  .right-panel { padding: 32px 24px 48px; }
+  .modal { max-height: 95vh; overflow-y: auto; }
+}

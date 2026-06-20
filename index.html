@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>USAP</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="login-1.css" />
+</head>
+<body>
+
+  <!-- ── LEFT PANEL ── -->
+  <div class="left-panel">
+    <div class="logo-wrapper">
+      <img src="USAP LOGO.svg" alt="USAP Logo" />
+    </div>
+  </div>
+
+  <!-- ── RIGHT PANEL ── -->
+  <div class="right-panel">
+    <p class="heading-main">Ano Na!?</p>
+    <p class="heading-sub">Join Today!</p>
+    <button class="btn" onclick="handleGoogle()">Sign up with Google</button>
+    <button class="btn" onclick="handleFacebook()">Sign up with Facebook</button>
+    <div class="or-divider">
+      <div class="or-line"></div>
+      <span class="or-text">Or</span>
+      <div class="or-line"></div>
+    </div>
+    <button class="btn" onclick="handleCreateAccount()">Create account</button>
+    <p class="terms">
+      By signing up, you agree to the
+      <a href="#">Terms of Service</a> and
+      <a href="#">Privacy Policy</a>, including
+      <a href="#">Cookie Use</a>.
+    </p>
+    <p class="already-text">Already have an account?</p>
+    <button class="btn-signin" onclick="handleSignIn()">Sign In</button>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       MODAL 1 — Create Account (choose type)
+       725 × 450
+  ══════════════════════════════════════ -->
+  <div class="modal-backdrop" id="modal-ca1">
+    <div class="modal" style="height:450px">
+      <button class="modal-close" onclick="closeModal('modal-ca1')">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M1 1l18 18M19 1L1 19" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <p class="modal-heading">Create an account</p>
+      <button class="modal-btn-primary" style="top:224px" onclick="openNormalFlow()">Create a normal account</button>
+      <button class="modal-btn-ghost"   style="top:285px; color:rgba(255,255,255,0.45)" onclick="openGuestModal()">Create a guest account</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       MODAL 2 — Create Account 2 (normal: username, email, DOB)
+       725 × 778
+  ══════════════════════════════════════ -->
+  <div class="modal-backdrop" id="modal-ca2">
+    <div class="modal" style="height:778px">
+      <button class="modal-close" onclick="closeModal('modal-ca2')">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M1 1l18 18M19 1L1 19" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <p class="modal-heading">Create an account</p>
+      <p class="modal-error" id="ca2-error" style="position:absolute;left:62px;top:165px;font-size:13px;color:#ff6b6b;display:none"></p>
+
+      <!-- Username -->
+      <div class="modal-field" style="top:181px">
+        <input type="text" id="ca2-username" placeholder="Username" autocomplete="off" />
+      </div>
+      <!-- Email -->
+      <div class="modal-field" style="top:242px">
+        <input type="email" id="ca2-email" placeholder="Email" autocomplete="off" />
+      </div>
+
+      <!-- Date of birth -->
+      <p class="modal-heading" style="top:308px;font-size:32px">Date of birth</p>
+      <p class="modal-label" style="left:62px;top:361px;width:600px;white-space:normal;line-height:1.4">
+        To ensure you have the right experience on our site, please confirm your age below. Your birthdate is used strictly for age verification and will never be shown publicly or shared with other users.
+      </p>
+
+      <!-- DOB dropdowns -->
+      <div class="dob-row">
+        <!-- Month -->
+        <div class="dob-dropdown dob-month">
+          <span class="dob-label">Month</span>
+          <span class="dob-value" id="dob-month-val">Month</span>
+          <select id="dob-month" onchange="updateDob('month')">
+            <option value="">Month</option>
+            <option value="01">January</option><option value="02">February</option>
+            <option value="03">March</option><option value="04">April</option>
+            <option value="05">May</option><option value="06">June</option>
+            <option value="07">July</option><option value="08">August</option>
+            <option value="09">September</option><option value="10">October</option>
+            <option value="11">November</option><option value="12">December</option>
+          </select>
+          <span class="dob-arrow">
+            <svg width="16" height="8" viewBox="0 0 24 11" fill="none"><path d="M1 1l11 9 11-9" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </div>
+        <!-- Day -->
+        <div class="dob-dropdown dob-day">
+          <span class="dob-label">Day</span>
+          <span class="dob-value" id="dob-day-val">0</span>
+          <select id="dob-day" onchange="updateDob('day')"></select>
+          <span class="dob-arrow">
+            <svg width="16" height="8" viewBox="0 0 24 11" fill="none"><path d="M1 1l11 9 11-9" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </div>
+        <!-- Year -->
+        <div class="dob-dropdown dob-year">
+          <span class="dob-label">Year</span>
+          <span class="dob-value" id="dob-year-val">0000</span>
+          <select id="dob-year" onchange="updateDob('year')"></select>
+          <span class="dob-arrow">
+            <svg width="16" height="8" viewBox="0 0 24 11" fill="none"><path d="M1 1l11 9 11-9" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </div>
+      </div>
+
+      <button class="modal-btn-primary" style="top:564px" onclick="submitCA2()">Next</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       MODAL 3 — Create Account 3 (password)
+       725 × 450
+  ══════════════════════════════════════ -->
+  <div class="modal-backdrop" id="modal-ca3">
+    <div class="modal" style="height:450px">
+      <button class="modal-close" onclick="closeModal('modal-ca3')">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M1 1l18 18M19 1L1 19" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <p class="modal-heading" style="top:62px">Create a password</p>
+      <p class="modal-error" id="ca3-error" style="position:absolute;left:62px;top:135px;font-size:13px;color:#ff6b6b;display:none"></p>
+
+      <div class="modal-field" style="top:150px">
+        <input type="password" id="ca3-password" placeholder="••••••••" />
+      </div>
+      <p class="modal-label" style="left:62px;top:216px">Confirm your password</p>
+      <div class="modal-field" style="top:254px">
+        <input type="password" id="ca3-confirm" placeholder="••••••••" />
+      </div>
+      <button class="modal-btn-primary" style="top:340px" onclick="submitCA3()">Log in</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       MODAL 4 — Guest Account
+       725 × 778
+  ══════════════════════════════════════ -->
+  <div class="modal-backdrop" id="modal-guest">
+    <div class="modal" style="height:778px">
+      <button class="modal-close" onclick="closeModal('modal-guest')">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M1 1l18 18M19 1L1 19" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <p class="modal-heading">Create an anonymous account</p>
+      <p class="modal-label" style="left:62px;top:166px;width:600px;white-space:normal;line-height:1.4">
+        Your privacy is guaranteed. Creating an anonymous account means your personal details, activity, and identity stay entirely hidden and 100% private.
+      </p>
+      <p class="modal-error" id="guest-error" style="position:absolute;left:62px;top:318px;font-size:13px;color:#ff6b6b;display:none"></p>
+
+      <div class="modal-field" style="top:335px">
+        <input type="text" id="guest-username" placeholder="Username" autocomplete="off" />
+      </div>
+      <div class="modal-field" style="top:396px">
+        <input type="password" id="guest-password" placeholder="Password" />
+      </div>
+      <button class="modal-btn-primary" style="top:564px" onclick="submitGuest()">Log in</button>
+      <p class="modal-link-row" style="left:227px;top:640px">
+        Want to create an account? <a onclick="switchToNormal()">Sign Up</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       MODAL 5 — Sign In
+       725 × 778
+  ══════════════════════════════════════ -->
+  <div class="modal-backdrop" id="modal-signin">
+    <div class="modal" style="height:778px">
+      <button class="modal-close" onclick="closeModal('modal-signin')">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M1 1l18 18M19 1L1 19" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <p class="modal-heading">Enter your email and password</p>
+      <p class="modal-error" id="signin-error" style="position:absolute;left:62px;top:275px;font-size:13px;color:#ff6b6b;display:none"></p>
+
+      <div class="modal-field" style="top:290px">
+        <input type="email" id="signin-email" placeholder="Email" autocomplete="off" />
+      </div>
+      <div class="modal-field" style="top:351px">
+        <input type="password" id="signin-password" placeholder="Password" />
+      </div>
+      <a class="modal-forgot" style="top:412px" onclick="submitForgotPassword()">Forgot Password?</a>
+      <button class="modal-btn-primary" style="top:564px" onclick="submitSignIn()">Log in</button>
+      <p class="modal-link-row" style="left:243px;top:640px">
+        Don't have an account? <a onclick="handleCreateAccount()">Sign Up</a>
+      </p>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════
+       MODAL 6 — Upload Profile Picture
+       725 × 778
+  ══════════════════════════════════════ -->
+  <div class="modal-backdrop" id="modal-pfp">
+    <div class="modal" style="height:778px">
+      <button class="modal-close" onclick="skipPfp()">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path d="M1 1l18 18M19 1L1 19" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <p class="modal-heading">Upload a Profile Picture</p>
+      <p class="modal-label" style="left:62px;top:166px;width:600px;white-space:normal;line-height:1.4">
+        By uploading this profile picture, you agree not to upload any content that is sexually explicit, hateful, violent, or promotes illegal activities. We reserve the right to remove any inappropriate avatars and terminate offending accounts without notice.
+      </p>
+
+      <!-- Circle avatar picker -->
+      <div id="pfp-circle" onclick="document.getElementById('pfp-input').click()" style="
+        position:absolute; left:50%; top:289px;
+        transform:translateX(-50%);
+        width:244px; height:246px; border-radius:50%;
+        background:#5f58ba; cursor:pointer;
+        display:flex; align-items:center; justify-content:center;
+        overflow:hidden;
+      ">
+        <!-- Camera icon (shown when no image selected) -->
+        <svg id="pfp-camera-icon" width="87" height="87" viewBox="0 0 87 87" fill="none">
+          <path d="M72.5 18.2H62.7l-4.4-8.8a4.35 4.35 0 00-3.9-2.4H32.6a4.35 4.35 0 00-3.9 2.4l-4.4 8.8H14.5A14.5 14.5 0 000 32.7v36.3A14.5 14.5 0 0014.5 83.5h58A14.5 14.5 0 0087 69V32.7a14.5 14.5 0 00-14.5-14.5zm5.8 50.8a5.8 5.8 0 01-5.8 5.8h-58a5.8 5.8 0 01-5.8-5.8V32.7a5.8 5.8 0 015.8-5.8h7.25a4.35 4.35 0 003.9-2.4l4.4-8.8h17.8l4.4 8.8a4.35 4.35 0 003.9 2.4h7.25a5.8 5.8 0 015.8 5.8V69zM43.5 30.45a21.75 21.75 0 100 43.5 21.75 21.75 0 000-43.5zm0 34.8a13.05 13.05 0 110-26.1 13.05 13.05 0 010 26.1z" fill="white"/>
+        </svg>
+        <!-- Preview image (hidden until file selected) -->
+        <img id="pfp-preview" src="" alt="Preview" style="display:none;width:100%;height:100%;object-fit:cover;" />
+      </div>
+      <input type="file" id="pfp-input" accept="image/*" style="display:none" onchange="previewPfp(this)" />
+
+      <button class="modal-btn-primary" style="top:564px" onclick="submitPfp()">Log in</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="login-1.js"></script>
+
+  <!-- Populate DOB dropdowns -->
+  <script>
+    (function() {
+      var dayEl = document.getElementById('dob-day');
+      for (var d = 1; d <= 31; d++) {
+        var o = document.createElement('option');
+        o.value = String(d).padStart(2,'0');
+        o.textContent = d;
+        dayEl.appendChild(o);
+      }
+      var yearEl = document.getElementById('dob-year');
+      var cur = new Date().getFullYear();
+      for (var y = cur; y >= cur - 100; y--) {
+        var o = document.createElement('option');
+        o.value = y; o.textContent = y;
+        yearEl.appendChild(o);
+      }
+    })();
+  </script>
+</body>
+</html>
