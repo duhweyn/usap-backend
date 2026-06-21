@@ -21,6 +21,14 @@ app.post('/users/sync', async (req, res) => {
       [supabase_uid]
     );
     if (existing.length > 0) {
+      // Keep the username current (e.g. if their Facebook name changes,
+      // or we're correcting an old email-based username)
+      if (username) {
+        await pool.query(
+          'UPDATE users SET username = ? WHERE supabase_uid = ?',
+          [username, supabase_uid]
+        );
+      }
       return res.json({ user_id: existing[0].user_id });
     }
     const [result] = await pool.query(
